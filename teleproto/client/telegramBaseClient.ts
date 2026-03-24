@@ -1,6 +1,4 @@
-import { Connection } from "../network";
-import { TelegramClient } from "./TelegramClient";
-import { version } from "../Version";
+import type { TelegramClient } from "./TelegramClient";
 import { sleep } from "../Helpers";
 import {
     ConnectionTCPFull,
@@ -16,7 +14,7 @@ import { EntityCache } from "../entityCache";
 import type { ParseInterface } from "./messageParse";
 import type { EventBuilder } from "../events/common";
 import { MarkdownParser } from "../extensions/markdown";
-import { MTProtoSender } from "../network";
+import { Connection, MTProtoSender } from "../network";
 import { ApiSenderPool } from "../network/ApiSenderPool";
 import { FilePool, FilePoolOptions } from "../network/FilePool";
 import { LAYER } from "../tl/runtime/registry";
@@ -27,6 +25,7 @@ import {
 import { Semaphore } from "async-mutex";
 import { LogLevel } from "../extensions/Logger";
 import Deferred from "../extensions/Deferred";
+import { version } from "../Version";
 import { UpdateManager } from "./UpdateManager";
 
 const API_SENDER_IDLE_TIMEOUT_MS = 30000;

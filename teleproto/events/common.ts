@@ -4,10 +4,9 @@ import { ChatGetter } from "../tl/custom";
 import type { TelegramClient } from "../client/TelegramClient";
 
 import { isArrayLike, returnBigInt } from "../Helpers";
-import { getPeerId } from "../Utils";
 import { SenderGetter } from "../tl/custom/senderGetter";
 import bigInt from "big-integer";
-import { parseID } from "../Utils";
+import { getPeerId, parseID } from "../Utils";
 
 /** @hidden */
 export async function _intoIdSet(
