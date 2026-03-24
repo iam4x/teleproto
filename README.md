@@ -1,15 +1,9 @@
-# teleproto
+# @iam4x/teleproto
 
-<p align="center">
-  <img src="https://img.shields.io/npm/v/teleproto" alt="npm version">
-  <img src="https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen" alt="node version">
-  <img src="https://img.shields.io/badge/language-TypeScript-3178c6" alt="typescript">
-  <img src="https://img.shields.io/badge/license-MIT-blue" alt="license">
-  <a href="https://t.me/teleproto"><img src="https://img.shields.io/badge/Telegram-Chat-26A5E4?logo=telegram" alt="telegram chat"></a>
-</p>
+> Fork from teleproto, updated dependencies and fixed circular dependencies
 
 Modern Telegram MTProto client for Node.js, written in TypeScript.
-`teleproto` is a high-performance fork of GramJS focused on clean API ergonomics, runtime reliability, and up-to-date Telegram layers.
+`@iam4x/teleproto` is a high-performance fork of GramJS focused on clean API ergonomics, runtime reliability, and up-to-date Telegram layers.
 
 ## Features
 
@@ -21,8 +15,8 @@ Modern Telegram MTProto client for Node.js, written in TypeScript.
 
 ## Installation
 
-```bash 
-npm i teleproto
+```bash
+npm i @iam4x/teleproto
 ```
 
 ## Quick Start
@@ -32,8 +26,8 @@ npm i teleproto
 3. Copy your `api_id` and `api_hash`
 
 ```ts
-import { TelegramClient } from "teleproto";
-import { StringSession } from "teleproto/sessions";
+import { TelegramClient } from "@iam4x/teleproto";
+import { StringSession } from "@iam4x/teleproto/sessions";
 import readline from "readline";
 
 const apiId = 123456;
@@ -76,21 +70,21 @@ main().catch(console.error);
 Use `StringSession` when you want to store auth as a single string:
 
 ```ts
-import { StringSession } from "teleproto/sessions";
+import { StringSession } from "@iam4x/teleproto/sessions";
 const session = new StringSession("");
 ```
 
 Use `StoreSession` when you want local folder-based persistence:
 
 ```ts
-import { StoreSession } from "teleproto/sessions";
+import { StoreSession } from "@iam4x/teleproto/sessions";
 const session = new StoreSession("teleproto_session");
 ```
 
 ## Events
 
 ```ts
-import { NewMessage } from "teleproto/events";
+import { NewMessage } from "@iam4x/teleproto/events";
 
 client.addEventHandler(
   async (event) => {
@@ -106,7 +100,7 @@ client.addEventHandler(
 ## Raw API
 
 ```ts
-import { Api } from "teleproto";
+import { Api } from "@iam4x/teleproto";
 
 const result = await client.invoke(
   new Api.help.GetConfig()
@@ -128,22 +122,6 @@ Run any example from the project root:
 ```bash
 npx ts-node --transpile-only teleproto_examples/print_updates.ts
 ```
-
-## Community
-
-- [Telegram Chat](https://t.me/teleproto) — questions, discussions, updates
-- [GitHub Issues](https://github.com/sanyok12345/teleproto/issues) — bug reports and feature requests
-
-## Support the project ☕
-
-If teleproto saves you time or powers your product — consider buying me a coffee.
-Every donation keeps the lights on and the commits flowing.
-
-| Network | Address |
-|---------|---------|
-|  **TON** | `sanyok12345.ton` |
-|  **TRX** | `TXCtN1UrxST9ovq5tDN3Zb96eNF4164nK5` |
-|  **SOL** | `B3XcKmAR9aG2nBiWSMDe76GGa55hPNgLQ92QR2SjRR6F` |
 
 ## License
 
