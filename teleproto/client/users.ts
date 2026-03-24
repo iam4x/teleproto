@@ -1,6 +1,6 @@
 import { Api } from "../tl";
 import type { Entity, EntityLike } from "../define";
-import { getPeerId as peerUtils, parseID } from "../Utils";
+import * as utils from "../Utils";
 import {
     _entityType,
     _EntityType,
@@ -9,7 +9,6 @@ import {
     returnBigInt,
 } from "../Helpers";
 import * as errors from "../errors";
-import * as utils from "../Utils";
 import type { TelegramClient } from "./TelegramClient";
 import bigInt from "big-integer";
 import { LogLevel } from "../extensions/Logger";
@@ -247,7 +246,7 @@ export async function getEntity(
     const inputs = [];
     for (const x of entityArray) {
         if (typeof x === "string") {
-            const valid = parseID(x);
+            const valid = utils.parseID(x);
             if (valid) {
                 inputs.push(await client.getInputEntity(valid));
             } else {
@@ -292,15 +291,15 @@ export async function getEntity(
     const idEntity = new Map<string, any>();
 
     for (const user of users) {
-        idEntity.set(peerUtils(user), user);
+        idEntity.set(utils.getPeerId(user), user);
     }
 
     for (const channel of channels) {
-        idEntity.set(peerUtils(channel), channel);
+        idEntity.set(utils.getPeerId(channel), channel);
     }
 
     for (const chat of chats) {
-        idEntity.set(peerUtils(chat), chat);
+        idEntity.set(utils.getPeerId(chat), chat);
     }
 
     const result = [];
@@ -308,7 +307,7 @@ export async function getEntity(
         if (typeof x === "string") {
             result.push(await _getEntityFromString(client, x));
         } else if (!(x instanceof Api.InputPeerSelf)) {
-            result.push(idEntity.get(peerUtils(x)));
+            result.push(idEntity.get(utils.getPeerId(x)));
         } else {
             for (const [key, u] of idEntity.entries()) {
                 if (u instanceof Api.User && u.self) {
@@ -348,7 +347,7 @@ export async function getInputEntity(
     // Next in priority is having a peer (or its ID) cached in-memory
     try {
         if (typeof peer == "string") {
-            const valid = parseID(peer);
+            const valid = utils.parseID(peer);
             if (valid) {
                 const res = client._entityCache.get(peer);
                 if (res) {
@@ -550,7 +549,7 @@ export async function getPeerId(
     addMark = true
 ) {
     if (typeof peer == "string") {
-        const valid = parseID(peer);
+        const valid = utils.parseID(peer);
         if (valid) {
             return utils.getPeerId(peer, addMark);
         } else {

@@ -1,13 +1,18 @@
 import { Api } from "../tl";
 
-import { TelegramClient } from "./TelegramClient";
+import type { TelegramClient } from "./TelegramClient";
 import { generateRandomBytes, readBigIntFromBuffer, sleep } from "../Helpers";
-import { getAppropriatedPartSize, getInputMedia, getMessageId } from "../Utils";
+import {
+    getAppropriatedPartSize,
+    getAttributes,
+    getInputMedia,
+    getMessageId,
+    isImage,
+} from "../Utils";
 import { EntityLike, FileLike, MarkupLike, MessageIDLike } from "../define";
 import path from "path";
 import { promises as fs } from "fs";
 import * as errors from "../errors";
-import * as utils from "../Utils";
 import { _parseMessageText } from "./messageParse";
 import { getCommentData } from "./messages";
 import bigInt, { BigInteger } from "big-integer";
@@ -350,10 +355,10 @@ export async function _fileToMedia(
     if (!file) {
         return { fileHandle: undefined, media: undefined, image: undefined };
     }
-    const isImage = utils.isImage(file);
+    const imageFile = isImage(file);
 
     if (asImage == undefined) {
-        asImage = isImage && !forceDocument;
+        asImage = imageFile && !forceDocument;
     }
     if (
         typeof file == "object" &&
@@ -366,7 +371,7 @@ export async function _fileToMedia(
         try {
             return {
                 fileHandle: undefined,
-                media: utils.getInputMedia(file, {
+                media: getInputMedia(file, {
                     isPhoto: asImage,
                     attributes: attributes,
                     forceDocument: forceDocument,
@@ -380,7 +385,7 @@ export async function _fileToMedia(
             return {
                 fileHandle: undefined,
                 media: undefined,
-                image: isImage,
+                image: imageFile,
             };
         }
     }
@@ -447,10 +452,10 @@ export async function _fileToMedia(
         });
     } else {
         // @ts-ignore
-        let res = utils.getAttributes(file, {
+        let res = getAttributes(file, {
             mimeType: mimeType,
             attributes: attributes,
-            forceDocument: forceDocument && !isImage,
+            forceDocument: forceDocument && !imageFile,
             voiceNote: voiceNote,
             videoNote: videoNote,
             supportsStreaming: supportsStreaming,
@@ -501,7 +506,7 @@ export async function _fileToMedia(
             mimeType: mimeType,
             attributes: attributes,
             thumb: uploadedThumb,
-            forceFile: forceDocument && !isImage,
+            forceFile: forceDocument && !imageFile,
         });
     }
     return {
@@ -567,7 +572,7 @@ export async function _sendAlbum(
         entity = discussionData.entity;
         replyTo = discussionData.replyTo;
     } else {
-        replyTo = utils.getMessageId(replyTo);
+        replyTo = getMessageId(replyTo);
     }
     if (!attributes) {
         attributes = [];
@@ -702,7 +707,7 @@ export async function sendFile(
         entity = discussionData.entity;
         replyTo = discussionData.replyTo;
     } else {
-        replyTo = utils.getMessageId(replyTo);
+        replyTo = getMessageId(replyTo);
     }
     if (Array.isArray(file)) {
         return await _sendAlbum(client, entity, {

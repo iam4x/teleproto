@@ -1,12 +1,12 @@
 import { Api } from "../tl";
 import { RequestIter } from "../requestIter";
 import type { TelegramClient } from "./TelegramClient";
-import * as utils from "../Utils";
 import { Dialog } from "../tl/custom/dialog";
 import { DateLike, EntityLike } from "../define";
 import { TotalList } from "../Helpers";
 import bigInt from "big-integer";
 import { LogLevel } from "../extensions/Logger";
+import { getPeerId } from "../Utils";
 
 const _MAX_CHUNK_SIZE = 100;
 
@@ -114,7 +114,7 @@ export class _DialogsIter extends RequestIter {
             ) {
                 continue;
             }
-            entities.set(utils.getPeerId(entity), entity);
+            entities.set(getPeerId(entity), entity);
         }
         for (const m of r.messages) {
             let message = m as unknown as Api.Message;
@@ -156,7 +156,7 @@ export class _DialogsIter extends RequestIter {
                     continue;
                 }
             }
-            const peerId = utils.getPeerId(d.peer);
+            const peerId = getPeerId(d.peer);
             if (!this.seen.has(peerId)) {
                 this.seen.add(peerId);
                 if (!entities.has(peerId)) {

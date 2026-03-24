@@ -1,6 +1,6 @@
 import type { ButtonLike, EntityLike } from "../../define";
-import { Api } from "../api";
 import { getInputUser } from "../../Utils";
+import { Api } from "../api";
 import type { BigInteger } from "big-integer";
 
 export class Button {

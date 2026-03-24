@@ -16,9 +16,15 @@ import {
     groupBy,
     generateRandomBigInt,
 } from "../Helpers";
-import { getInputMedia, getMessageId, getPeerId, parseID } from "../Utils";
+import {
+    chunks,
+    getInputMedia,
+    getInputPeer,
+    getMessageId,
+    getPeerId,
+    parseID,
+} from "../Utils";
 import type { TelegramClient } from "./TelegramClient";
-import * as utils from "../Utils";
 import { _parseMessageText } from "./messageParse";
 import { _getPeer } from "./users";
 import bigInt, { BigInteger } from "big-integer";
@@ -379,14 +385,13 @@ export class _IDsIter extends RequestIter {
         }
         const entities = new Map();
         for (const entity of [...r.users, ...r.chats]) {
-            entities.set(utils.getPeerId(entity), entity);
+            entities.set(getPeerId(entity), entity);
         }
         let message: Api.TypeMessage;
         for (message of r.messages) {
             if (
                 message instanceof Api.MessageEmpty ||
-                (fromId &&
-                    utils.getPeerId(message.peerId) != utils.getPeerId(fromId))
+                (fromId && getPeerId(message.peerId) != getPeerId(fromId))
             ) {
                 this.buffer?.push(undefined);
             } else {
@@ -1076,7 +1081,7 @@ export async function deleteMessages(
     const results = [];
 
     if (ty == _EntityType.CHANNEL) {
-        for (const chunk of utils.chunks(ids)) {
+        for (const chunk of chunks(ids)) {
             results.push(
                 client.invoke(
                     new Api.channels.DeleteMessages({
@@ -1087,7 +1092,7 @@ export async function deleteMessages(
             );
         }
     } else {
-        for (const chunk of utils.chunks(ids)) {
+        for (const chunk of chunks(ids)) {
             results.push(
                 client.invoke(
                     new Api.messages.DeleteMessages({
@@ -1144,7 +1149,7 @@ export async function _pin(
     notify: boolean = false,
     pmOneSide: boolean = false
 ) {
-    message = utils.getMessageId(message) || 0;
+    message = getMessageId(message) || 0;
 
     if (message === 0) {
         return await client.invoke(
@@ -1196,10 +1201,10 @@ export async function markAsRead(
         if (message) {
             if (Array.isArray(message)) {
                 maxId = Math.max(
-                    ...message.map((v) => utils.getMessageId(v) as number)
+                    ...message.map((v) => getMessageId(v) as number)
                 );
             } else {
-                maxId = utils.getMessageId(message) as number;
+                maxId = getMessageId(message) as number;
             }
         }
     }
@@ -1233,7 +1238,7 @@ export async function getCommentData(
     const result = await client.invoke(
         new Api.messages.GetDiscussionMessage({
             peer: entity,
-            msgId: utils.getMessageId(message),
+            msgId: getMessageId(message),
         })
     );
     const relevantMessage = result.messages.reduce(
@@ -1250,7 +1255,7 @@ export async function getCommentData(
         }
     }
     return {
-        entity: utils.getInputPeer(chat),
+        entity: getInputPeer(chat),
         replyTo: relevantMessage.id,
     };
 }

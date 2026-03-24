@@ -1,8 +1,15 @@
 import bigInt from "big-integer";
 import type { AuthKey } from "../crypto/AuthKey";
-import { generateRandomLong, generateRandomBytes, mod, readBufferFromBigInt, readBigIntFromBuffer } from "../Helpers";
 import { Api } from "../tl";
-import { sha256, toSignedLittleBuffer } from "../Helpers";
+import {
+    generateRandomBytes,
+    generateRandomLong,
+    mod,
+    readBigIntFromBuffer,
+    readBufferFromBigInt,
+    sha256,
+    toSignedLittleBuffer,
+} from "../Helpers";
 import { GZIPPacked, TLMessage } from "../tl/core";
 import { BinaryReader } from "../extensions";
 import type { BinaryWriter } from "../extensions";
@@ -168,9 +175,7 @@ export class MTProtoState {
         const s = toSignedLittleBuffer(this.salt, 8);
         const i = toSignedLittleBuffer(this.id, 8);
         data = Buffer.concat([Buffer.concat([s, i]), data]);
-        const padding = generateRandomBytes(
-            mod(-(data.length + 12), 16) + 12
-        );
+        const padding = generateRandomBytes(mod(-(data.length + 12), 16) + 12);
         // Being substr(what, offset, length); x = 0 for client
         // "msg_key_large = SHA256(substr(auth_key, 88+x, 32) + pt + padding)"
         const msgKeyLarge = await sha256(

@@ -1,6 +1,4 @@
-import { Connection } from "../network";
-import { TelegramClient } from "./TelegramClient";
-import { version } from "../Version";
+import type { TelegramClient } from "./TelegramClient";
 import { sleep } from "../Helpers";
 import {
     ConnectionTCPFull,
@@ -16,7 +14,7 @@ import { EntityCache } from "../entityCache";
 import type { ParseInterface } from "./messageParse";
 import type { EventBuilder } from "../events/common";
 import { MarkdownParser } from "../extensions/markdown";
-import { MTProtoSender } from "../network";
+import { Connection, MTProtoSender } from "../network";
 import { LAYER } from "../tl/runtime/registry";
 import {
     ConnectionTCPMTProxyAbridged,
@@ -25,6 +23,7 @@ import {
 import { Semaphore } from "async-mutex";
 import { LogLevel } from "../extensions/Logger";
 import Deferred from "../extensions/Deferred";
+import { version } from "../Version";
 
 const EXPORTED_SENDER_RECONNECT_TIMEOUT = 1000; // 1 sec
 const EXPORTED_SENDER_RELEASE_TIMEOUT = 30000; // 30 sec
