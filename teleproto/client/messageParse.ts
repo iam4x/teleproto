@@ -2,7 +2,6 @@ import { getPeerId, sanitizeParseMode } from "../Utils";
 import { Api } from "../tl";
 import type { EntityLike } from "../define";
 import type { TelegramClient } from "./TelegramClient";
-import { utils } from "../index";
 import { _EntityType, _entityType, isArrayLike } from "../Helpers";
 import bigInt from "big-integer";
 
@@ -105,7 +104,7 @@ export function _getResponseMessage(
     ) {
         updates = result.updates;
         for (const x of [...result.users, ...result.chats]) {
-            entities.set(utils.getPeerId(x), x);
+            entities.set(getPeerId(x), x);
         }
     } else {
         return;
@@ -180,7 +179,7 @@ export function _getResponseMessage(
             if (request.media.poll.id == update.pollId) {
                 const m = new Api.Message({
                     id: request.id,
-                    peerId: utils.getPeerId(request.peer),
+                    peerId: getPeerId(request.peer),
                     media: new Api.MessageMediaPoll({
                         poll: update.poll!,
                         results: update.results,

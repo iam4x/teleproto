@@ -1,16 +1,17 @@
 import type { TelegramClient } from "./TelegramClient";
 import type { EntitiesLike, Entity, EntityLike, ValueOf } from "../define";
 import {
+    _EntityType,
+    _entityType,
     sleep,
     getMinBigInt,
     TotalList,
     returnBigInt,
 } from "../Helpers";
 import { RequestIter } from "../requestIter";
-import { helpers, utils } from "..";
 import { Api } from "../tl";
 import bigInt, { BigInteger, isInstance } from "big-integer";
-import { getPeerId } from "../Utils";
+import { getDisplayName, getPeerId } from "../Utils";
 
 const _MAX_PARTICIPANTS_CHUNK_SIZE = 200;
 const _MAX_ADMIN_LOG_CHUNK_SIZE = 100;
@@ -150,14 +151,13 @@ export class _ParticipantsIter extends RequestIter {
             }
         }
         entity = await this.client.getInputEntity(entity);
-        const ty = helpers._entityType(entity);
-        if (search && (filter || ty != helpers._EntityType.CHANNEL)) {
+        const ty = _entityType(entity);
+        if (search && (filter || ty != _EntityType.CHANNEL)) {
             // We need to 'search' ourselves unless we have a PeerChannel
             search = search.toLowerCase();
             this.filterEntity = (entity: Entity) => {
                 return (
-                    utils
-                        .getDisplayName(entity)
+                    getDisplayName(entity)
                         .toLowerCase()
                         .includes(search!) ||
                     ("username" in entity ? entity.username || "" : "")
@@ -170,7 +170,7 @@ export class _ParticipantsIter extends RequestIter {
         }
         // Only used for channels, but we should always set the attribute
         this.requests = [];
-        if (ty == helpers._EntityType.CHANNEL) {
+        if (ty == _EntityType.CHANNEL) {
             if (showTotal) {
                 const channel = await this.client.invoke(
                     new Api.channels.GetFullChannel({
@@ -197,7 +197,7 @@ export class _ParticipantsIter extends RequestIter {
                     hash: bigInt.zero,
                 })
             );
-        } else if (ty == helpers._EntityType.CHAT) {
+        } else if (ty == _EntityType.CHAT) {
             if (!("chatId" in entity)) {
                 throw new Error(
                     "Found chat without id " + JSON.stringify(entity)
@@ -369,7 +369,7 @@ class _AdminLogIter extends RequestIter {
         const r = await this.client.invoke(this.request);
         const entities = new Map();
         for (const entity of [...r.users, ...r.chats]) {
-            entities.set(utils.getPeerId(entity), entity);
+            entities.set(getPeerId(entity), entity);
         }
         const eventIds = [];
         for (const e of r.events) {
@@ -446,14 +446,14 @@ export async function kickParticipant(
     let resp;
     let request;
 
-    const type = helpers._entityType(peer);
-    if (type === helpers._EntityType.CHAT) {
+    const type = _entityType(peer);
+    if (type === _EntityType.CHAT) {
         request = new Api.messages.DeleteChatUser({
             chatId: returnBigInt(getPeerId(entity)),
             userId: returnBigInt(getPeerId(participant)),
         });
         resp = await client.invoke(request);
-    } else if (type === helpers._EntityType.CHANNEL) {
+    } else if (type === _EntityType.CHANNEL) {
         if (user instanceof Api.InputPeerSelf) {
             request = new Api.channels.LeaveChannel({
                 channel: peer,

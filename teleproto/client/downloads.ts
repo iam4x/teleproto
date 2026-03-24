@@ -1,9 +1,14 @@
 import { Api } from "../tl";
 import type { TelegramClient } from "./TelegramClient";
-import { strippedPhotoToJpg } from "../Utils";
+import {
+    getAppropriatedPartSize,
+    getExtension,
+    getFileInfo,
+    getInputPeer,
+    strippedPhotoToJpg,
+} from "../Utils";
 import { sleep } from "../Helpers";
 import { EntityLike, OutFile, ProgressCallback } from "../define";
-import { utils } from "..";
 import { RequestIter } from "../requestIter";
 import { MTProtoSender } from "../network";
 import { FileMigrateError } from "../errors";
@@ -296,7 +301,7 @@ export function iterDownload(
 ) {
     // we're ignoring here to make it more flexible (which is probably a bad idea)
     // @ts-ignore
-    const info = utils.getFileInfo(file);
+    const info = getFileInfo(file);
     if (info.dcId != undefined) {
         dcId = info.dcId;
     }
@@ -411,7 +416,7 @@ export async function downloadFileV2(
         if (!fileSize) {
             partSizeKb = 64;
         } else {
-            partSizeKb = utils.getAppropriatedPartSize(fileSize);
+            partSizeKb = getAppropriatedPartSize(fileSize);
         }
     }
 
@@ -603,7 +608,7 @@ export async function _downloadDocument(
         outputFile = getProperFilename(
             outputFile,
             "document",
-            "." + (utils.getExtension(doc) || "bin"),
+            "." + (getExtension(doc) || "bin"),
             date
         );
     } else {
@@ -845,7 +850,7 @@ export async function downloadProfilePhoto(
     ) {
         dcId = photo.dcId;
         loc = new Api.InputPeerPhotoFileLocation({
-            peer: utils.getInputPeer(entity),
+            peer: getInputPeer(entity),
             photoId: photo.photoId,
             big: fileParams.isBig,
         });

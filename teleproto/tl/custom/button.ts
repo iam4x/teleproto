@@ -1,6 +1,6 @@
 import type { ButtonLike, EntityLike } from "../../define";
+import { getInputUser } from "../../Utils";
 import { Api } from "../api";
-import { utils } from "../..";
 
 export class Button {
     public button: ButtonLike;
@@ -68,7 +68,7 @@ export class Button {
         return new Api.InputKeyboardButtonUrlAuth({
             text,
             url: url || text,
-            bot: utils.getInputUser(bot || new Api.InputUserSelf()),
+            bot: getInputUser(bot || new Api.InputUserSelf()),
             requestWriteAccess: writeAccess,
             fwdText: fwdText,
         });

@@ -3,9 +3,16 @@ import type { AuthKey } from "../crypto/AuthKey";
 import { Api } from "../tl";
 import bigInt from "big-integer";
 
-import { getDisplayName, getInputPeer, getPeerId } from "../Utils";
+import {
+    getDisplayName,
+    getInputPeer,
+    getPeerId,
+    parseID,
+    parsePhone,
+    parseUsername,
+    resolveId,
+} from "../Utils";
 import { isArrayLike, returnBigInt } from "../Helpers";
-import { utils } from "..";
 import type { EntityLike } from "../define";
 
 export class MemorySession extends Session {
@@ -213,9 +220,9 @@ export class MemorySession extends Session {
             }
         } else {
             const ids = [
-                utils.getPeerId(new Api.PeerUser({ userId: returnBigInt(id) })),
-                utils.getPeerId(new Api.PeerChat({ chatId: returnBigInt(id) })),
-                utils.getPeerId(
+                getPeerId(new Api.PeerUser({ userId: returnBigInt(id) })),
+                getPeerId(new Api.PeerChat({ chatId: returnBigInt(id) })),
+                getPeerId(
                     new Api.PeerChannel({ channelId: returnBigInt(id) })
                 ),
             ];
@@ -244,11 +251,11 @@ export class MemorySession extends Session {
                 return key;
             }
             // Try to early return if this key can be casted as input peer
-            return utils.getInputPeer(key);
+            return getInputPeer(key);
         } else {
             // Not a TLObject or can't be cast into InputPeer
             if (typeof key === "object") {
-                key = utils.getPeerId(key);
+                key = getPeerId(key);
                 exact = true;
             } else {
                 exact = false;
@@ -263,17 +270,17 @@ export class MemorySession extends Session {
         }
         let result = undefined;
         if (typeof key === "string") {
-            const phone = utils.parsePhone(key);
+            const phone = parsePhone(key);
             if (phone) {
                 result = this.getEntityRowsByPhone(phone);
             } else {
-                const { username, isInvite } = utils.parseUsername(key);
+                const { username, isInvite } = parseUsername(key);
                 if (username && !isInvite) {
                     result = this.getEntityRowsByUsername(username);
                 }
             }
             if (!result) {
-                const id = utils.parseID(key);
+                const id = parseID(key);
                 if (id) {
                     result = this.getEntityRowsById(id, exact);
                 }
@@ -285,7 +292,7 @@ export class MemorySession extends Session {
         if (result) {
             let entityId = result[0]; // unpack resulting tuple
             const entityHash = bigInt(result[1]);
-            const resolved = utils.resolveId(returnBigInt(entityId));
+            const resolved = resolveId(returnBigInt(entityId));
             entityId = resolved[0];
             const kind = resolved[1];
             // removes the mark and returns type of entity

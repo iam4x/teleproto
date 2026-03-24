@@ -1,9 +1,9 @@
 import type { EventBuilder } from "../events/common";
 import { Api } from "../tl";
-import type { TelegramClient } from "..";
+import type { TelegramClient } from "./TelegramClient";
 import { UpdateConnectionState } from "../network";
 import type { Raw } from "../events";
-import { utils } from "../index";
+import { getPeerId } from "../Utils";
 import { getRandomInt, returnBigInt, sleep } from "../Helpers";
 import Timeout = NodeJS.Timeout;
 
@@ -144,14 +144,14 @@ async function _processDifference(
     const entities = new Map();
     for (const user of diff.users) {
         try {
-            entities.set(utils.getPeerId(user), user);
+            entities.set(getPeerId(user), user);
         } catch (e) {
             // Skip invalid
         }
     }
     for (const chat of diff.chats) {
         try {
-            entities.set(utils.getPeerId(chat), chat);
+            entities.set(getPeerId(chat), chat);
         } catch (e) {
             // Skip invalid
         }
@@ -206,7 +206,7 @@ export function _handleUpdate(
             const entities = new Map();
             for (const x of [...update.users, ...update.chats]) {
                 try {
-                    entities.set(utils.getPeerId(x), x);
+                    entities.set(getPeerId(x), x);
                 } catch (e) {
                     // Skip invalid entity
                 }
