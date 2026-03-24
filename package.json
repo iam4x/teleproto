@@ -1,12 +1,12 @@
 {
-  "name": "teleproto",
-  "version": "1.224.1",
+  "name": "@iam4x/teleproto",
+  "version": "1.223.1",
   "description": "NodeJS MTProto API Telegram client library,",
   "main": "index.js",
   "types": "index.d.ts",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sanyok12345/teleproto.git"
+    "url": "git+https://github.com/iam4x/teleproto.git"
   },
   "scripts": {
     "clean": "rm -rf dist",
@@ -23,7 +23,7 @@
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/sanyok12345/teleproto/issues"
+    "url": "https://github.com/iam4x/teleproto/issues"
   },
   "keywords": [
     "telegram",
@@ -34,7 +34,7 @@
     "typescript",
     "api"
   ],
-  "homepage": "https://github.com/sanyok12345/teleproto#readme",
+  "homepage": "https://github.com/iam4x/teleproto#readme",
   "devDependencies": {
     "@types/mime": "^2.0.3",
     "@types/node": "^22.15.18",
