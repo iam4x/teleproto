@@ -1,17 +1,19 @@
-[![npm](https://img.shields.io/npm/v/teleproto)](https://www.npmjs.com/package/teleproto)
+[![npm](https://img.shields.io/npm/v/@iam4x/teleproto)](https://www.npmjs.com/package/@iam4x/teleproto)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue)](./LICENSE)
 
-This project was forked from the open source GramJS project in 2025 and is now developed independently.
+> Fork of [teleproto](https://github.com/sanyok12345/teleproto), updated dependencies and fixed circular dependencies.
 
-This README is just a fast *quick start*. Ongoing discussion happens in the [Telegram chat](https://t.me/teleproto).
+This README is just a fast *quick start*. Upstream discussion happens in the [Telegram chat](https://t.me/teleproto).
 
-# What is teleproto?
+# What is @iam4x/teleproto?
 
-teleproto is a TypeScript client for Telegram's MTProto API — the same protocol Telegram's own apps speak. Through it, your code gets the full account surface: userbots, multi-account automation, file transfer, raw TL invocation when you need it. If you only need to push notifications from a bot, the official Bot API is simpler; teleproto exists for everything *beyond* that.
+`@iam4x/teleproto` is a TypeScript client for Telegram's MTProto API — the same protocol Telegram's own apps speak. Through it, your code gets the full account surface: userbots, multi-account automation, file transfer, raw TL invocation when you need it. If you only need to push notifications from a bot, the official Bot API is simpler; teleproto exists for everything *beyond* that.
 
-# Installing teleproto
+# Installing @iam4x/teleproto
 
-    % npm install teleproto
+```bash
+npm install @iam4x/teleproto
+```
 
 Pure JavaScript, no native build step — installs cleanly on Alpine, ARM, and serverless runtimes.
 
@@ -20,8 +22,8 @@ Pure JavaScript, no native build step — installs cleanly on Alpine, ARM, and s
 You need an `api_id` and `api_hash` from <https://my.telegram.org>. Then:
 
 ```ts
-import { TelegramClient } from "teleproto";
-import { StringSession } from "teleproto/sessions";
+import { TelegramClient } from "@iam4x/teleproto";
+import { StringSession } from "@iam4x/teleproto/sessions";
 import { createInterface } from "node:readline/promises";
 
 const rl = createInterface({ input: process.stdin, output: process.stdout });
@@ -54,7 +56,7 @@ The session string is your saved login. Drop it back into `new StringSession(sav
 Send a message, listen for incoming ones:
 
 ```ts
-import { NewMessage } from "teleproto/events";
+import { NewMessage } from "@iam4x/teleproto/events";
 
 await client.sendMessage("me", { message: "hello from teleproto" });
 
@@ -69,7 +71,7 @@ client.addEventHandler(
 Every method in Telegram's TL schema is callable directly through `Api.*`. teleproto follows the schema layer-for-layer, so what Telegram adds is usually available here within days.
 
 ```ts
-import { Api } from "teleproto";
+import { Api } from "@iam4x/teleproto";
 
 const config = await client.invoke(new Api.help.GetConfig());
 ```
@@ -101,7 +103,9 @@ Runnable scripts live in [teleproto_examples/](teleproto_examples/):
 
 Each is self-contained. Set your credentials at the top and run:
 
-    % npx ts-node --transpile-only teleproto_examples/print_updates.ts
+```bash
+npx ts-node --transpile-only teleproto_examples/print_updates.ts
+```
 
 # Code contributions
 
