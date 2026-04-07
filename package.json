@@ -1,7 +1,7 @@
 {
   "name": "@iam4x/teleproto",
   "private": false,
-  "version": "1.223.2",
+  "version": "1.224.0",
   "description": "NodeJS MTProto API Telegram client library,",
   "main": "index.js",
   "types": "index.d.ts",
