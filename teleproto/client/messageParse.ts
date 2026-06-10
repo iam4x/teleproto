@@ -4,22 +4,10 @@ import type { EntityLike } from "../define";
 import type { TelegramClient } from "./TelegramClient";
 import { _EntityType, _entityType, isArrayLike } from "../Helpers";
 import bigInt from "big-integer";
-
-export type messageEntities =
-    | typeof Api.MessageEntityBold
-    | typeof Api.MessageEntityItalic
-    | typeof Api.MessageEntityStrike
-    | typeof Api.MessageEntityCode
-    | typeof Api.MessageEntityPre;
-export const DEFAULT_DELIMITERS: {
-    [key: string]: messageEntities;
-} = {
-    "**": Api.MessageEntityBold,
-    __: Api.MessageEntityItalic,
-    "~~": Api.MessageEntityStrike,
-    "`": Api.MessageEntityCode,
-    "```": Api.MessageEntityPre,
-};
+export {
+    DEFAULT_DELIMITERS,
+    type messageEntities,
+} from "./parseDelimiters";
 
 export interface ParseInterface {
     parse: (message: string) => [string, Api.TypeMessageEntity[]];

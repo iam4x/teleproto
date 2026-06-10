@@ -15,10 +15,21 @@ function resolveSpec(specifier) {
 function main() {
     const specifier = process.argv[2] || "teleproto";
     const packageRoot = resolveSpec(specifier);
-    const packageEvents = `${packageRoot}/events`;
+    const entryPoints = [
+        packageRoot,
+        `${packageRoot}/events`,
+        `${packageRoot}/sessions`,
+        `${packageRoot}/client`,
+        `${packageRoot}/tl`,
+        `${packageRoot}/tl/custom`,
+    ];
+
+    for (const entry of entryPoints) {
+        require(entry);
+    }
 
     const teleproto = require(packageRoot);
-    const events = require(packageEvents);
+    const events = require(`${packageRoot}/events`);
 
     assert.equal(typeof teleproto.TelegramClient, "function");
     assert.equal(typeof teleproto.sessions?.MemorySession, "function");

@@ -14,7 +14,7 @@ import path from "path";
 import { promises as fs } from "fs";
 import * as errors from "../errors";
 import { _parseMessageText } from "./messageParse";
-import { getCommentData } from "./messages";
+import { getCommentData } from "./commentData";
 import bigInt, { BigInteger } from "big-integer";
 
 interface OnProgress {

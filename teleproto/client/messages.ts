@@ -25,10 +25,12 @@ import {
     parseID,
 } from "../Utils";
 import type { TelegramClient } from "./TelegramClient";
+import { getCommentData } from "./commentData";
 import { _parseMessageText } from "./messageParse";
 import { _getPeer } from "./users";
 import bigInt, { BigInteger } from "big-integer";
 import { _fileToMedia } from "./uploads";
+export { getCommentData } from "./commentData";
 
 const _MAX_CHUNK_SIZE = 100;
 
@@ -1227,37 +1229,6 @@ export async function markAsRead(
         );
         return true;
     }
-}
-
-/** @hidden */
-export async function getCommentData(
-    client: TelegramClient,
-    entity: EntityLike,
-    message: number | Api.Message
-) {
-    const result = await client.invoke(
-        new Api.messages.GetDiscussionMessage({
-            peer: entity,
-            msgId: getMessageId(message),
-        })
-    );
-    const relevantMessage = result.messages.reduce(
-        (p: Api.TypeMessage, c: Api.TypeMessage) => (p && p.id < c.id ? p : c)
-    );
-    let chat;
-    for (const c of result.chats) {
-        if (
-            relevantMessage.peerId instanceof Api.PeerChannel &&
-            c.id.eq(relevantMessage.peerId.channelId)
-        ) {
-            chat = c;
-            break;
-        }
-    }
-    return {
-        entity: getInputPeer(chat),
-        replyTo: relevantMessage.id,
-    };
 }
 
 // TODO do the rest
